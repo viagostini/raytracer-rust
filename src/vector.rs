@@ -11,6 +11,12 @@ pub struct Vector {
     pub z: f64,
 }
 
+impl Vector {
+    pub fn magnitude(&self) -> f64 {
+        f64::sqrt(self.x.powi(2) + self.y.powi(2) + self.z.powi(2))
+    }
+}
+
 impl PartialEq for Vector {
     fn eq(&self, other: &Self) -> bool {
         approx_eq!(f64, self.x, other.x)
@@ -208,5 +214,32 @@ mod point_tests {
         };
 
         assert_eq!(vector / 3.0, expected);
+    }
+
+    #[test]
+    fn magnitude() {
+        let mut v = Vector {
+            x: 0.0,
+            y: 1.0,
+            z: 0.0,
+        };
+
+        assert_eq!(v.magnitude(), 1.0);
+
+        v = Vector {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+
+        assert_eq!(v.magnitude(), f64::sqrt(14.0));
+
+        v = Vector {
+            x: -1.0,
+            y: -2.0,
+            z: -3.0,
+        };
+
+        assert_eq!(v.magnitude(), f64::sqrt(14.0));
     }
 }
