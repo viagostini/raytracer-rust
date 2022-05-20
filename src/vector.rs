@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub};
+use std::ops::{Add, Neg, Sub};
 
 use float_cmp::approx_eq;
 
@@ -51,6 +51,18 @@ impl Sub for Vector {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
+        }
+    }
+}
+
+impl Neg for Vector {
+    type Output = Vector;
+
+    fn neg(self) -> Self::Output {
+        Self::Output {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
         }
     }
 }
@@ -125,5 +137,22 @@ mod point_tests {
         };
 
         assert_eq!(v1 - v2, expected);
+    }
+
+    #[test]
+    fn negate_vector() {
+        let point = Vector {
+            x: 1.0,
+            y: -2.0,
+            z: 3.0,
+        };
+
+        let expected = Vector {
+            x: -1.0,
+            y: 2.0,
+            z: -3.0,
+        };
+
+        assert_eq!(-point, expected);
     }
 }
