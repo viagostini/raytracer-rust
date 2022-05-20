@@ -1,5 +1,5 @@
 use float_cmp::approx_eq;
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 use crate::vector::Vector;
 
@@ -30,6 +30,30 @@ impl Add<Vector> for Point {
     }
 }
 
+impl Sub for Point {
+    type Output = Vector;
+
+    fn sub(self, rhs: Point) -> Self::Output {
+        Self::Output {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z,
+        }
+    }
+}
+
+impl Sub<Vector> for Point {
+    type Output = Point;
+
+    fn sub(self, rhs: Vector) -> Self::Output {
+        Self::Output {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z,
+        }
+    }
+}
+
 #[cfg(test)]
 mod point_tests {
     use super::*;
@@ -54,5 +78,51 @@ mod point_tests {
         };
 
         assert_eq!(point + vector, expected)
+    }
+
+    #[test]
+    fn sub_point_point() {
+        let p1 = Point {
+            x: 3.0,
+            y: 2.0,
+            z: 1.0,
+        };
+
+        let p2 = Point {
+            x: 5.0,
+            y: 6.0,
+            z: 7.0,
+        };
+
+        let expected = Vector {
+            x: -2.0,
+            y: -4.0,
+            z: -6.0,
+        };
+
+        assert_eq!(p1 - p2, expected);
+    }
+
+    #[test]
+    fn sub_point_vector() {
+        let p1 = Point {
+            x: 3.0,
+            y: 2.0,
+            z: 1.0,
+        };
+
+        let v1 = Vector {
+            x: 5.0,
+            y: 6.0,
+            z: 7.0,
+        };
+
+        let expected = Point {
+            x: -2.0,
+            y: -4.0,
+            z: -6.0,
+        };
+
+        assert_eq!(p1 - v1, expected);
     }
 }

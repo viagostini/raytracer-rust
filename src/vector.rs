@@ -1,4 +1,4 @@
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 use float_cmp::approx_eq;
 
@@ -39,6 +39,18 @@ impl Add<Point> for Vector {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z,
+        }
+    }
+}
+
+impl Sub for Vector {
+    type Output = Vector;
+
+    fn sub(self, rhs: Vector) -> Self::Output {
+        Self::Output {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z,
         }
     }
 }
@@ -90,5 +102,28 @@ mod point_tests {
         };
 
         assert_eq!(vector + point, expected)
+    }
+
+    #[test]
+    fn sub_vector_vector() {
+        let v1 = Vector {
+            x: 3.0,
+            y: 2.0,
+            z: 1.0,
+        };
+
+        let v2 = Vector {
+            x: 5.0,
+            y: 6.0,
+            z: 7.0,
+        };
+
+        let expected = Vector {
+            x: -2.0,
+            y: -4.0,
+            z: -6.0,
+        };
+
+        assert_eq!(v1 - v2, expected);
     }
 }
