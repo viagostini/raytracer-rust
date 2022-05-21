@@ -2,9 +2,9 @@ use std::ops::{Add, Div, Mul, Neg, Sub};
 
 use float_cmp::approx_eq;
 
-use crate::point::Point;
+use crate::core::point::Point;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Vector {
     pub x: f64,
     pub y: f64,
@@ -14,6 +14,16 @@ pub struct Vector {
 impl Vector {
     pub fn magnitude(&self) -> f64 {
         f64::sqrt(self.x.powi(2) + self.y.powi(2) + self.z.powi(2))
+    }
+
+    pub fn normalize(&self) -> Vector {
+        let magnitude = self.magnitude();
+
+        Vector {
+            x: self.x / magnitude,
+            y: self.y / magnitude,
+            z: self.z / magnitude,
+        }
     }
 
     pub fn cross(&self, rhs: &Vector) -> Vector {
@@ -273,6 +283,39 @@ mod point_tests {
         };
 
         assert_eq!(v.magnitude(), f64::sqrt(14.0));
+    }
+
+    #[test]
+    fn normalization() {
+        let mut v = Vector {
+            x: 4.0,
+            y: 0.0,
+            z: 0.0,
+        };
+
+        assert_eq!(
+            v.normalize(),
+            Vector {
+                x: 1.0,
+                y: 0.0,
+                z: 0.0
+            }
+        );
+
+        v = Vector {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+
+        assert_eq!(
+            v.normalize(),
+            Vector {
+                x: 1.0 / f64::sqrt(14.0),
+                y: 2.0 / f64::sqrt(14.0),
+                z: 3.0 / f64::sqrt(14.0)
+            }
+        );
     }
 
     #[test]

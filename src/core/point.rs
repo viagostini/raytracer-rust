@@ -1,9 +1,9 @@
 use float_cmp::approx_eq;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-use crate::vector::Vector;
+use crate::core::vector::Vector;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Point {
     pub x: f64,
     pub y: f64,
