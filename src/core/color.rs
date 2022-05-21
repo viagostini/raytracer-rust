@@ -8,6 +8,19 @@ pub struct Color {
     pub blue: f64,
 }
 
+impl Color {
+    pub const BLACK: Color = Color {
+        red: 0.0,
+        green: 0.0,
+        blue: 0.0,
+    };
+    pub const WHITE: Color = Color {
+        red: 1.0,
+        green: 1.0,
+        blue: 1.0,
+    };
+}
+
 impl PartialEq for Color {
     fn eq(&self, other: &Self) -> bool {
         approx_eq!(f64, self.red, other.red)
