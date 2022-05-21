@@ -14,11 +14,26 @@ impl Color {
         green: 0.0,
         blue: 0.0,
     };
+
     pub const WHITE: Color = Color {
         red: 1.0,
         green: 1.0,
         blue: 1.0,
     };
+
+    pub const RED: Color = Color {
+        red: 1.0,
+        green: 0.0,
+        blue: 0.0,
+    };
+
+    pub fn to_rgb(&self) -> image::Rgb<u8> {
+        image::Rgb([
+            (self.red * 255.0).clamp(0.0, 255.0) as u8,
+            (self.green * 255.0).clamp(0.0, 255.0) as u8,
+            (self.blue * 255.0).clamp(0.0, 255.0) as u8,
+        ])
+    }
 }
 
 impl PartialEq for Color {
@@ -166,5 +181,16 @@ mod color_tests {
         };
 
         assert_eq!(color / 3.0, expected);
+    }
+
+    #[test]
+    fn to_rgb() {
+        let c = Color {
+            red: 3.0,
+            green: 1.0,
+            blue: 0.5,
+        };
+
+        assert_eq!(c.to_rgb(), image::Rgb([255, 255, 127]));
     }
 }

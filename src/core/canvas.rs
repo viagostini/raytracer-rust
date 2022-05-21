@@ -2,18 +2,18 @@ use std::ops::{Index, IndexMut};
 
 use crate::core::color::Color;
 
-struct Canvas {
+pub struct Canvas {
     pub width: usize,
     pub height: usize,
-    pixels: Vec<Vec<Color>>,
+    pub pixels: Vec<Vec<Color>>,
 }
 
 impl Canvas {
-    fn new(width: usize, height: usize) -> Canvas {
+    pub fn new(width: usize, height: usize) -> Canvas {
         Canvas::new_filled(width, height, Color::BLACK)
     }
 
-    fn new_filled(width: usize, height: usize, color: Color) -> Canvas {
+    pub fn new_filled(width: usize, height: usize, color: Color) -> Canvas {
         Canvas {
             width,
             height,
