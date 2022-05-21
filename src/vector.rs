@@ -15,6 +15,14 @@ impl Vector {
     pub fn magnitude(&self) -> f64 {
         f64::sqrt(self.x.powi(2) + self.y.powi(2) + self.z.powi(2))
     }
+
+    pub fn cross(&self, rhs: &Vector) -> Vector {
+        Vector {
+            x: self.y * rhs.z - self.z * rhs.y,
+            y: self.z * rhs.x - self.x * rhs.z,
+            z: self.x * rhs.y - self.y * rhs.x,
+        }
+    }
 }
 
 impl PartialEq for Vector {
@@ -265,5 +273,28 @@ mod point_tests {
         };
 
         assert_eq!(v.magnitude(), f64::sqrt(14.0));
+    }
+
+    #[test]
+    fn cross_product() {
+        let v1 = Vector {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+        let v2 = Vector {
+            x: 2.0,
+            y: 3.0,
+            z: 4.0,
+        };
+
+        let expected = Vector {
+            x: -1.0,
+            y: 2.0,
+            z: -1.0,
+        };
+
+        assert_eq!(v1.cross(&v2), expected);
+        assert_eq!(v2.cross(&v1), -expected);
     }
 }
