@@ -73,6 +73,14 @@ impl Neg for Vector {
     }
 }
 
+impl Mul for Vector {
+    type Output = f64;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
+    }
+}
+
 impl Mul<f64> for Vector {
     type Output = Vector;
 
@@ -180,6 +188,22 @@ mod point_tests {
         };
 
         assert_eq!(-point, expected);
+    }
+
+    #[test]
+    fn dot_product() {
+        let v1 = Vector {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
+        let v2 = Vector {
+            x: 2.0,
+            y: 3.0,
+            z: 4.0,
+        };
+
+        assert_eq!(v1 * v2, 20.0);
     }
 
     #[test]
