@@ -22,13 +22,9 @@ fn tick(proj: &Projectile, env: &Environment) -> Projectile {
 }
 
 fn main() {
-    let position = Point::new(0.0, 1.0, 0.0);
-
-    let velocity = Vector::new(1.0, 1.8, 0.0);
-
     let mut proj = Projectile {
-        position,
-        velocity: velocity.normalize() * 11.25,
+        position: Point::new(0.0, 1.0, 0.0),
+        velocity: Vector::new(1.0, 1.8, 0.0).normalize() * 11.25,
     };
 
     let env = Environment {
