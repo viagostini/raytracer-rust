@@ -23,10 +23,10 @@ impl Vector {
         f64::sqrt(self.x.powi(2) + self.y.powi(2) + self.z.powi(2))
     }
 
-    pub fn normalize(&self) -> Vector {
+    pub fn normalize(&self) -> Self {
         let magnitude = self.magnitude();
 
-        Vector {
+        Self {
             x: self.x / magnitude,
             y: self.y / magnitude,
             z: self.z / magnitude,
@@ -34,8 +34,8 @@ impl Vector {
         }
     }
 
-    pub fn cross(&self, rhs: &Vector) -> Vector {
-        Vector {
+    pub fn cross(&self, rhs: &Self) -> Self {
+        Self {
             x: self.y * rhs.z - self.z * rhs.y,
             y: self.z * rhs.x - self.x * rhs.z,
             z: self.x * rhs.y - self.y * rhs.x,
@@ -68,8 +68,8 @@ impl Add for Vector {
 impl Add<Point> for Vector {
     type Output = Point;
 
-    fn add(self, other: Point) -> Point {
-        Point {
+    fn add(self, other: Point) -> Self::Output {
+        Self::Output {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z,
