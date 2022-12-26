@@ -22,17 +22,9 @@ fn tick(proj: &Projectile, env: &Environment) -> Projectile {
 }
 
 fn main() {
-    let position = Point {
-        x: 0.0,
-        y: 1.0,
-        z: 0.0,
-    };
+    let position = Point::new(0.0, 1.0, 0.0);
 
-    let velocity = Vector {
-        x: 1.0,
-        y: 1.8,
-        z: 0.0,
-    };
+    let velocity = Vector::new(1.0, 1.8, 0.0);
 
     let mut proj = Projectile {
         position,
@@ -40,16 +32,8 @@ fn main() {
     };
 
     let env = Environment {
-        gravity: Vector {
-            x: 0.0,
-            y: -0.1,
-            z: 0.0,
-        },
-        wind: Vector {
-            x: -0.01,
-            y: 0.0,
-            z: 0.0,
-        },
+        gravity: Vector::new(0.0, -0.1, 0.0),
+        wind: Vector::new(-0.01, 0.0, 0.0),
     };
 
     let mut canvas = Canvas::new(900, 550);

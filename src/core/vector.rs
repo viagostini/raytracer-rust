@@ -9,6 +9,13 @@ pub struct Vector {
     pub x: f64,
     pub y: f64,
     pub z: f64,
+    pub w: f64,
+}
+
+impl Vector {
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
+        Vector { x, y, z, w: 0.0 }
+    }
 }
 
 impl Vector {
@@ -23,6 +30,7 @@ impl Vector {
             x: self.x / magnitude,
             y: self.y / magnitude,
             z: self.z / magnitude,
+            w: 0.0,
         }
     }
 
@@ -31,6 +39,7 @@ impl Vector {
             x: self.y * rhs.z - self.z * rhs.y,
             y: self.z * rhs.x - self.x * rhs.z,
             z: self.x * rhs.y - self.y * rhs.x,
+            w: 0.0,
         }
     }
 }
@@ -51,6 +60,7 @@ impl Add for Vector {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z,
+            w: self.w + other.w,
         }
     }
 }
@@ -63,6 +73,7 @@ impl Add<Point> for Vector {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z,
+            w: self.w + other.w,
         }
     }
 }
@@ -75,6 +86,7 @@ impl Sub for Vector {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
+            w: self.w - rhs.w,
         }
     }
 }
@@ -87,6 +99,7 @@ impl Neg for Vector {
             x: -self.x,
             y: -self.y,
             z: -self.z,
+            w: 0.0,
         }
     }
 }
@@ -107,6 +120,7 @@ impl Mul<f64> for Vector {
             x: self.x * rhs,
             y: self.y * rhs,
             z: self.z * rhs,
+            w: 0.0,
         }
     }
 }
@@ -125,217 +139,110 @@ mod point_tests {
 
     #[test]
     fn sum_vector_vector() {
-        let v1 = Vector {
-            x: 3.0,
-            y: -2.0,
-            z: 5.0,
-        };
-        let v2 = Vector {
-            x: -2.0,
-            y: 3.0,
-            z: 1.0,
-        };
+        let v1 = Vector::new(3.0, -2.0, 5.0);
+        let v2 = Vector::new(-2.0, 3.0, 1.0);
 
-        let expected = Vector {
-            x: 1.0,
-            y: 1.0,
-            z: 6.0,
-        };
+        let expected = Vector::new(1.0, 1.0, 6.0);
 
         assert_eq!(v1 + v2, expected)
     }
 
     #[test]
     fn sum_vector_point() {
-        let vector = Vector {
-            x: -2.0,
-            y: 3.0,
-            z: 1.0,
-        };
+        let vector = Vector::new(-2.0, 3.0, 1.0);
 
-        let point = Point {
-            x: 3.0,
-            y: -2.0,
-            z: 5.0,
-        };
+        let point = Point::new(3.0, -2.0, 5.0);
 
-        let expected = Point {
-            x: 1.0,
-            y: 1.0,
-            z: 6.0,
-        };
+        let expected = Point::new(1.0, 1.0, 6.0);
 
         assert_eq!(vector + point, expected)
     }
 
     #[test]
     fn sub_vector_vector() {
-        let v1 = Vector {
-            x: 3.0,
-            y: 2.0,
-            z: 1.0,
-        };
+        let v1 = Vector::new(3.0, 2.0, 1.0);
 
-        let v2 = Vector {
-            x: 5.0,
-            y: 6.0,
-            z: 7.0,
-        };
+        let v2 = Vector::new(5.0, 6.0, 7.0);
 
-        let expected = Vector {
-            x: -2.0,
-            y: -4.0,
-            z: -6.0,
-        };
+        let expected = Vector::new(-2.0, -4.0, -6.0);
 
         assert_eq!(v1 - v2, expected);
     }
 
     #[test]
     fn negate_vector() {
-        let point = Vector {
-            x: 1.0,
-            y: -2.0,
-            z: 3.0,
-        };
+        let point = Vector::new(1.0, -2.0, 3.0);
 
-        let expected = Vector {
-            x: -1.0,
-            y: 2.0,
-            z: -3.0,
-        };
+        let expected = Vector::new(-1.0, 2.0, -3.0);
 
         assert_eq!(-point, expected);
     }
 
     #[test]
     fn dot_product() {
-        let v1 = Vector {
-            x: 1.0,
-            y: 2.0,
-            z: 3.0,
-        };
-        let v2 = Vector {
-            x: 2.0,
-            y: 3.0,
-            z: 4.0,
-        };
+        let v1 = Vector::new(1.0, 2.0, 3.0);
+        let v2 = Vector::new(2.0, 3.0, 4.0);
 
         assert_eq!(v1 * v2, 20.0);
     }
 
     #[test]
     fn multiply_vector_by_f64() {
-        let vector = Vector {
-            x: 1.0,
-            y: -2.0,
-            z: 3.0,
-        };
+        let vector = Vector::new(1.0, -2.0, 3.0);
 
-        let expected = Vector {
-            x: 3.0,
-            y: -6.0,
-            z: 9.0,
-        };
+        let expected = Vector::new(3.0, -6.0, 9.0);
 
         assert_eq!(vector * 3.0, expected);
     }
 
     #[test]
     fn divide_vector_by_f64() {
-        let vector = Vector {
-            x: 1.0,
-            y: -2.0,
-            z: 3.0,
-        };
+        let vector = Vector::new(1.0, -2.0, 3.0);
 
-        let expected = Vector {
-            x: (1.0 / 3.0),
-            y: (-2.0 / 3.0),
-            z: 1.0,
-        };
+        let expected = Vector::new(1.0 / 3.0, -2.0 / 3.0, 1.0);
 
         assert_eq!(vector / 3.0, expected);
     }
 
     #[test]
     fn magnitude() {
-        let mut v = Vector {
-            x: 0.0,
-            y: 1.0,
-            z: 0.0,
-        };
+        let mut v = Vector::new(0.0, 1.0, 0.0);
 
         assert_eq!(v.magnitude(), 1.0);
 
-        v = Vector {
-            x: 1.0,
-            y: 2.0,
-            z: 3.0,
-        };
+        v = Vector::new(1.0, 2.0, 3.0);
 
         assert_eq!(v.magnitude(), f64::sqrt(14.0));
 
-        v = Vector {
-            x: -1.0,
-            y: -2.0,
-            z: -3.0,
-        };
+        v = Vector::new(-1.0, -2.0, -3.0);
 
         assert_eq!(v.magnitude(), f64::sqrt(14.0));
     }
 
     #[test]
     fn normalization() {
-        let mut v = Vector {
-            x: 4.0,
-            y: 0.0,
-            z: 0.0,
-        };
+        let mut v = Vector::new(4.0, 0.0, 0.0);
+
+        assert_eq!(v.normalize(), Vector::new(1.0, 0.0, 0.0));
+
+        v = Vector::new(1.0, 2.0, 3.0);
 
         assert_eq!(
             v.normalize(),
-            Vector {
-                x: 1.0,
-                y: 0.0,
-                z: 0.0
-            }
-        );
-
-        v = Vector {
-            x: 1.0,
-            y: 2.0,
-            z: 3.0,
-        };
-
-        assert_eq!(
-            v.normalize(),
-            Vector {
-                x: 1.0 / f64::sqrt(14.0),
-                y: 2.0 / f64::sqrt(14.0),
-                z: 3.0 / f64::sqrt(14.0)
-            }
+            Vector::new(
+                1.0 / f64::sqrt(14.0),
+                2.0 / f64::sqrt(14.0),
+                3.0 / f64::sqrt(14.0)
+            )
         );
     }
 
     #[test]
     fn cross_product() {
-        let v1 = Vector {
-            x: 1.0,
-            y: 2.0,
-            z: 3.0,
-        };
-        let v2 = Vector {
-            x: 2.0,
-            y: 3.0,
-            z: 4.0,
-        };
+        let v1 = Vector::new(1.0, 2.0, 3.0);
+        let v2 = Vector::new(2.0, 3.0, 4.0);
 
-        let expected = Vector {
-            x: -1.0,
-            y: 2.0,
-            z: -1.0,
-        };
+        let expected = Vector::new(-1.0, 2.0, -1.0);
 
         assert_eq!(v1.cross(&v2), expected);
         assert_eq!(v2.cross(&v1), -expected);
