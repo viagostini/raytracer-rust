@@ -21,6 +21,17 @@ impl Matrix4 {
         Matrix4 { data }
     }
 
+    pub fn transposed(&self) -> Matrix4 {
+        let mut m = Matrix4::new();
+
+        for row in 0..4 {
+            for col in 0..4 {
+                m[[row, col]] = self[[col, row]]
+            }
+        }
+        m
+    }
+
     const IDENTITY: Matrix4 = Matrix4::from([
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
@@ -182,5 +193,29 @@ pub mod matrix_tests {
         ]);
 
         assert_eq!(m * Matrix4::IDENTITY, m);
+    }
+
+    #[test]
+    fn transpose_matrix4() {
+        let m = Matrix4::from([
+            [1.0, 2.0, 3.0, 4.0],
+            [5.0, 6.0, 7.0, 8.0],
+            [9.0, 8.0, 7.0, 6.0],
+            [5.0, 4.0, 3.0, 2.0],
+        ]);
+
+        let expected = Matrix4::from([
+            [1.0, 5.0, 9.0, 5.0],
+            [2.0, 6.0, 8.0, 4.0],
+            [3.0, 7.0, 7.0, 3.0],
+            [4.0, 8.0, 6.0, 2.0],
+        ]);
+
+        assert_eq!(m.transposed(), expected);
+    }
+
+    #[test]
+    fn transpose_of_identity_is_identity() {
+        assert_eq!(Matrix4::IDENTITY.transposed(), Matrix4::IDENTITY);
     }
 }
