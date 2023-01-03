@@ -2,6 +2,8 @@ use std::ops::{Index, IndexMut, Mul};
 
 use float_cmp::approx_eq;
 
+use super::matrix3::Matrix3;
+
 #[derive(Debug, Copy, Clone)]
 pub struct Matrix4 {
     pub data: [[f64; 4]; 4],
@@ -27,6 +29,26 @@ impl Matrix4 {
         for row in 0..4 {
             for col in 0..4 {
                 m[[row, col]] = self[[col, row]]
+            }
+        }
+        m
+    }
+
+    pub fn submatrix(&self, row: usize, col: usize) -> Matrix3 {
+        assert!(row <= 4 && col <= 4);
+
+        let mut m = Matrix3::new();
+
+        for _row in 0..4 {
+            for _col in 0..4 {
+                if _row == row || _col == col {
+                    continue;
+                }
+
+                let new_row = if _row < row { _row } else { _row - 1 };
+                let new_col = if _col < col { _col } else { _col - 1 };
+
+                m[[new_row, new_col]] = self[[_row, _col]];
             }
         }
         m
@@ -217,5 +239,21 @@ pub mod matrix_tests {
     #[test]
     fn transpose_of_identity_is_identity() {
         assert_eq!(Matrix4::IDENTITY.transposed(), Matrix4::IDENTITY);
+    }
+
+    #[test]
+    fn submatrix_from_matrix4_is_matrix3() {
+        let m = Matrix4::from([
+            [1.0, 2.0, 3.0, 4.0],
+            [5.0, 6.0, 7.0, 8.0],
+            [9.0, 8.0, 7.0, 6.0],
+            [5.0, 4.0, 3.0, 2.0],
+        ]);
+
+        let m_sub = m.submatrix(2, 1);
+
+        let expected = Matrix3::from([[1.0, 3.0, 4.0], [5.0, 7.0, 8.0], [5.0, 3.0, 2.0]]);
+
+        assert_eq!(m_sub, expected);
     }
 }
