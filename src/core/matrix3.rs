@@ -1,4 +1,4 @@
-use std::ops::Index;
+use std::ops::{Index, IndexMut};
 
 use float_cmp::approx_eq;
 
@@ -8,6 +8,12 @@ pub struct Matrix3 {
 }
 
 impl Matrix3 {
+    pub const fn new() -> Matrix3 {
+        Matrix3 {
+            data: [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        }
+    }
+
     pub const fn from(data: [[f64; 3]; 3]) -> Matrix3 {
         Matrix3 { data }
     }
@@ -20,6 +26,14 @@ impl Index<[usize; 2]> for Matrix3 {
         let [i, j] = index;
 
         &self.data[i][j]
+    }
+}
+
+impl IndexMut<[usize; 2]> for Matrix3 {
+    fn index_mut(&mut self, index: [usize; 2]) -> &mut Self::Output {
+        let [i, j] = index;
+
+        &mut self.data[i][j]
     }
 }
 
