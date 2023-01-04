@@ -53,6 +53,16 @@ impl Matrix3 {
             minor
         }
     }
+
+    pub fn determinant(&self) -> f64 {
+        let mut det = 0.0;
+
+        for col in 0..3 {
+            det += self[[0, col]] * self.cofactor(0, col);
+        }
+
+        det
+    }
 }
 
 impl Index<[usize; 2]> for Matrix3 {
@@ -152,5 +162,18 @@ pub mod matrix3_tests {
 
         assert_approx_eq!(f64, m_cof, -25.0);
         assert_approx_eq!(f64, m_cof, -m_min);
+
+        let m = Matrix3::from([[1.0, 2.0, 6.0], [-5.0, 8.0, -4.0], [2.0, 6.0, 4.0]]);
+
+        assert_approx_eq!(f64, m.cofactor(0, 0), 56.0);
+        assert_approx_eq!(f64, m.cofactor(0, 1), 12.0);
+        assert_approx_eq!(f64, m.cofactor(0, 2), -46.0);
+    }
+
+    #[test]
+    fn determinant_of_matrix3() {
+        let m = Matrix3::from([[1.0, 2.0, 6.0], [-5.0, 8.0, -4.0], [2.0, 6.0, 4.0]]);
+
+        assert_approx_eq!(f64, m.determinant(), -196.0);
     }
 }
