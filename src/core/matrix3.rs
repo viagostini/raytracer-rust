@@ -2,6 +2,8 @@ use std::ops::{Index, IndexMut};
 
 use float_cmp::approx_eq;
 
+use super::matrix2::Matrix2;
+
 #[derive(Debug, Copy, Clone)]
 pub struct Matrix3 {
     pub data: [[f64; 3]; 3],
@@ -16,6 +18,26 @@ impl Matrix3 {
 
     pub const fn from(data: [[f64; 3]; 3]) -> Matrix3 {
         Matrix3 { data }
+    }
+
+    pub fn submatrix(&self, row: usize, col: usize) -> Matrix2 {
+        assert!(row <= 3 && col <= 3);
+
+        let mut m = Matrix2::new();
+
+        for _row in 0..3 {
+            for _col in 0..3 {
+                if _row == row || _col == col {
+                    continue;
+                }
+
+                let new_row = if _row < row { _row } else { _row - 1 };
+                let new_col = if _col < col { _col } else { _col - 1 };
+
+                m[[new_row, new_col]] = self[[_row, _col]];
+            }
+        }
+        m
     }
 }
 
@@ -76,5 +98,16 @@ pub mod matrix3_tests {
         let m2 = Matrix3::from([[1.001, 2.0, 3.0], [5.5, 6.5, 7.55], [9.0, 10.0, 11.0]]);
 
         assert_ne!(m1, m2);
+    }
+
+    #[test]
+    fn submatrix_from_matrix3_is_matrix2() {
+        let m = Matrix3::from([[1.0, 5.0, 0.0], [-3.0, 2.0, 7.0], [0.0, 6.0, -3.0]]);
+
+        let m_sub = m.submatrix(0, 2);
+
+        let expected = Matrix2::from([[-3.0, 2.0], [0.0, 6.0]]);
+
+        assert_eq!(m_sub, expected);
     }
 }
