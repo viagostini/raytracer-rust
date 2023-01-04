@@ -79,6 +79,32 @@ impl Matrix4 {
         det
     }
 
+    pub fn is_invertible(&self) -> bool {
+        if approx_eq!(f64, self.determinant(), 0.0) {
+            false
+        } else {
+            true
+        }
+    }
+
+    pub fn inverse(&self) -> Matrix4 {
+        assert!(self.is_invertible());
+
+        let mut m = Matrix4::new();
+        let det = self.determinant();
+
+        for row in 0..4 {
+            for col in 0..4 {
+                let c = self.cofactor(row, col);
+
+                // already transposing here by indexing with col, row
+                m[[col, row]] = c / det;
+            }
+        }
+
+        m
+    }
+
     const IDENTITY: Matrix4 = Matrix4::from([
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
@@ -326,5 +352,78 @@ pub mod matrix_tests {
 
         assert_approx_eq!(f64, m.determinant(), -4071.0, epsilon = EPSILON);
     }
+
+    #[test]
+    fn check_matrix4_is_invertible() {
+        let m = Matrix4::from([
+            [6.0, 4.0, 4.0, 4.0],
+            [5.0, 5.0, 7.0, 6.0],
+            [4.0, -9.0, 3.0, -7.0],
+            [9.0, 1.0, 7.0, -6.0],
+        ]);
+
+        assert_approx_eq!(f64, m.determinant(), -2120.0, epsilon = EPSILON);
+        assert_eq!(m.is_invertible(), true);
+
+        let m = Matrix4::from([
+            [-4.0, 2.0, -2.0, -3.0],
+            [9.0, 6.0, 2.0, 6.0],
+            [0.0, -5.0, 1.0, -5.0],
+            [0.0, 0.0, 0.0, 0.0],
+        ]);
+
+        assert_approx_eq!(f64, m.determinant(), 0.0, epsilon = EPSILON);
+        assert_eq!(m.is_invertible(), false);
+    }
+
+    #[test]
+    fn invert_matrix4() {
+        let m = Matrix4::from([
+            [-5.0, 2.0, 6.0, -8.0],
+            [1.0, -5.0, 1.0, 8.0],
+            [7.0, 7.0, -6.0, -7.0],
+            [1.0, -3.0, 7.0, 4.0],
+        ]);
+
+        let expected = Matrix4::from([
+            [0.21805, 0.45113, 0.24060, -0.04511],
+            [-0.80827, -1.45677, -0.44361, 0.52068],
+            [-0.07895, -0.22368, -0.05263, 0.19737],
+            [-0.52256, -0.81391, -0.30075, 0.30639],
+        ]);
+
+        assert_eq!(m.inverse(), expected);
+
+        let m = Matrix4::from([
+            [8.0, -5.0, 9.0, 2.0],
+            [7.0, 5.0, 6.0, 1.0],
+            [-6.0, 0.0, 9.0, 6.0],
+            [-3.0, 0.0, -9.0, -4.0],
+        ]);
+
+        let expected = Matrix4::from([
+            [-0.15385, -0.15385, -0.28205, -0.53846],
+            [-0.07692, 0.12308, 0.02564, 0.03077],
+            [0.35897, 0.35897, 0.43590, 0.92308],
+            [-0.69231, -0.69231, -0.76923, -1.92308],
+        ]);
+
+        assert_eq!(m.inverse(), expected);
+
+        let m = Matrix4::from([
+            [9.0, 3.0, 0.0, 9.0],
+            [-5.0, -2.0, -6.0, -3.0],
+            [-4.0, 9.0, 6.0, 4.0],
+            [-7.0, 6.0, 6.0, 2.0],
+        ]);
+
+        let expected = Matrix4::from([
+            [-0.04074, -0.07778, 0.14444, -0.22222],
+            [-0.07778, 0.03333, 0.36667, -0.33333],
+            [-0.02901, -0.14630, -0.10926, 0.12963],
+            [0.17778, 0.06667, -0.26667, 0.33333],
+        ]);
+
+        assert_eq!(m.inverse(), expected);
     }
 }
