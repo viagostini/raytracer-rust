@@ -8,6 +8,10 @@ pub mod core {
     pub mod vector;
 }
 
+pub mod utils {
+    pub mod utils;
+}
+
 pub mod io {
     pub mod image;
 }

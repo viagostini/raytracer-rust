@@ -1,6 +1,7 @@
 use std::ops::{Index, IndexMut, Mul};
 
-use float_cmp::approx_eq;
+use crate::utils::utils::FLOAT_MARGIN;
+use float_cmp::{approx_eq, ApproxEq};
 
 use super::matrix3::Matrix3;
 
@@ -110,7 +111,7 @@ impl PartialEq for Matrix4 {
             .iter()
             .flatten()
             .zip(other.data.iter().flatten())
-            .all(|(&a, &b)| approx_eq!(f64, a, b))
+            .all(|(&a, &b)| a.approx_eq(b, FLOAT_MARGIN))
     }
 }
 
@@ -137,6 +138,8 @@ impl Mul for Matrix4 {
 #[cfg(test)]
 pub mod matrix_tests {
     use float_cmp::assert_approx_eq;
+
+    use crate::utils::utils::EPSILON;
 
     use super::*;
 
@@ -292,9 +295,9 @@ pub mod matrix_tests {
             [-6.0, 7.0, 7.0, -9.0],
         ]);
 
-        assert_approx_eq!(f64, m.minor(0, 0), 690.0);
-        assert_approx_eq!(f64, m.minor(1, 2), 431.0);
-        assert_approx_eq!(f64, m.minor(2, 3), 207.0);
+        assert_approx_eq!(f64, m.minor(0, 0), 690.0, epsilon = EPSILON);
+        assert_approx_eq!(f64, m.minor(1, 2), 431.0, epsilon = EPSILON);
+        assert_approx_eq!(f64, m.minor(2, 3), 207.0, epsilon = EPSILON);
     }
 
     #[test]
@@ -306,10 +309,10 @@ pub mod matrix_tests {
             [-6.0, 7.0, 7.0, -9.0],
         ]);
 
-        assert_approx_eq!(f64, m.cofactor(0, 0), 690.0);
-        assert_approx_eq!(f64, m.cofactor(0, 1), 447.0);
-        assert_approx_eq!(f64, m.cofactor(0, 2), 210.0);
-        assert_approx_eq!(f64, m.cofactor(0, 3), 51.0);
+        assert_approx_eq!(f64, m.cofactor(0, 0), 690.0, epsilon = EPSILON);
+        assert_approx_eq!(f64, m.cofactor(0, 1), 447.0, epsilon = EPSILON);
+        assert_approx_eq!(f64, m.cofactor(0, 2), 210.0, epsilon = EPSILON);
+        assert_approx_eq!(f64, m.cofactor(0, 3), 51.0, epsilon = EPSILON);
     }
 
     #[test]
@@ -321,6 +324,7 @@ pub mod matrix_tests {
             [-6.0, 7.0, 7.0, -9.0],
         ]);
 
-        assert_approx_eq!(f64, m.determinant(), -4071.0);
+        assert_approx_eq!(f64, m.determinant(), -4071.0, epsilon = EPSILON);
+    }
     }
 }
