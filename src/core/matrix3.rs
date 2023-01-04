@@ -39,6 +39,10 @@ impl Matrix3 {
         }
         m
     }
+
+    pub fn minor(&self, row: usize, col: usize) -> f64 {
+        self.submatrix(row, col).determinant()
+    }
 }
 
 impl Index<[usize; 2]> for Matrix3 {
@@ -73,6 +77,8 @@ impl Eq for Matrix3 {}
 
 #[cfg(test)]
 pub mod matrix3_tests {
+    use float_cmp::assert_approx_eq;
+
     use super::*;
 
     #[test]
@@ -109,5 +115,15 @@ pub mod matrix3_tests {
         let expected = Matrix2::from([[-3.0, 2.0], [0.0, 6.0]]);
 
         assert_eq!(m_sub, expected);
+    }
+
+    #[test]
+    fn minor_of_matrix3() {
+        let m = Matrix3::from([[3.0, 5.0, 0.0], [2.0, -1.0, -7.0], [6.0, -1.0, 5.0]]);
+
+        let m_sub = m.submatrix(1, 0);
+
+        assert_approx_eq!(f64, m_sub.determinant(), m.minor(1, 0));
+        assert_approx_eq!(f64, m.minor(1, 0), 25.0);
     }
 }
