@@ -426,4 +426,26 @@ pub mod matrix_tests {
 
         assert_eq!(m.inverse(), expected);
     }
+
+    #[test]
+    fn multiply_product_by_inverse() {
+        let a = Matrix4::from([
+            [3.0, -9.0, 7.0, 3.0],
+            [3.0, -8.0, 2.0, -9.0],
+            [-4.0, 4.0, 4.0, 1.0],
+            [-6.0, 5.0, -1.0, 1.0],
+        ]);
+
+        let b = Matrix4::from([
+            [8.0, 2.0, 2.0, 2.0],
+            [3.0, -1.0, 7.0, 0.0],
+            [7.0, 0.0, 5.0, 4.0],
+            [6.0, -2.0, 0.0, 5.0],
+        ]);
+
+        let product = a * b;
+
+        // note that order matters in matrix multiplication
+        assert_eq!(product * b.inverse(), a);
+    }
 }
