@@ -47,6 +47,15 @@ impl Transforms {
             [0.0, 0.0, 0.0, 1.0],
         ])
     }
+
+    pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix4 {
+        Matrix4::from([
+            [1.0, xy, xz, 0.0],
+            [yx, 1.0, yz, 0.0],
+            [zx, zy, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ])
+    }
 }
 
 #[cfg(test)]
@@ -179,6 +188,45 @@ pub mod transforms_tests {
 
         let actual = full_quarter * p;
         let expected = Point::new(-1.0, 0.0, 0.0);
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn shearing_tuples() {
+        let s = Transforms::shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+        let p = Point::new(2.0, 3.0, 4.0);
+
+        let actual = s * p;
+        let expected = Point::new(6.0, 3.0, 4.0);
+
+        assert_eq!(expected, actual);
+
+        let s = Transforms::shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+
+        let actual = s * p;
+        let expected = Point::new(2.0, 5.0, 4.0);
+
+        assert_eq!(expected, actual);
+
+        let s = Transforms::shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+
+        let actual = s * p;
+        let expected = Point::new(2.0, 7.0, 4.0);
+
+        assert_eq!(expected, actual);
+
+        let s = Transforms::shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+        let actual = s * p;
+        let expected = Point::new(2.0, 3.0, 6.0);
+
+        assert_eq!(expected, actual);
+
+        let s = Transforms::shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+
+        let actual = s * p;
+        let expected = Point::new(2.0, 3.0, 7.0);
 
         assert_eq!(expected, actual);
     }
