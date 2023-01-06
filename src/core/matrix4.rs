@@ -3,7 +3,7 @@ use std::ops::{Index, IndexMut, Mul};
 use crate::utils::utils::FLOAT_MARGIN;
 use float_cmp::{approx_eq, ApproxEq};
 
-use super::matrix3::Matrix3;
+use super::{matrix3::Matrix3, point::Point};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Matrix4 {
@@ -161,6 +161,27 @@ impl Mul for Matrix4 {
     }
 }
 
+impl Mul<Point> for Matrix4 {
+    type Output = Point;
+
+    fn mul(self, rhs: Point) -> Self::Output {
+        Self::Output::new(
+            self[[0, 0]] * rhs.x
+                + self[[0, 1]] * rhs.y
+                + self[[0, 2]] * rhs.z
+                + self[[0, 3]] * rhs.w,
+            self[[1, 0]] * rhs.x
+                + self[[1, 1]] * rhs.y
+                + self[[1, 2]] * rhs.z
+                + self[[1, 3]] * rhs.w,
+            self[[2, 0]] * rhs.x
+                + self[[2, 1]] * rhs.y
+                + self[[2, 2]] * rhs.z
+                + self[[2, 3]] * rhs.w,
+        )
+    }
+}
+
 #[cfg(test)]
 pub mod matrix_tests {
     use float_cmp::assert_approx_eq;
@@ -270,6 +291,23 @@ pub mod matrix_tests {
         ]);
 
         assert_eq!(m * Matrix4::IDENTITY, m);
+    }
+
+    #[test]
+    fn multiply_matrix4_by_point() {
+        let m = Matrix4::from([
+            [1.0, 2.0, 3.0, 4.0],
+            [2.0, 4.0, 4.0, 2.0],
+            [8.0, 6.0, 4.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]);
+
+        let p = Point::new(1.0, 2.0, 3.0);
+
+        let actual = m * p;
+        let expected = Point::new(18.0, 24.0, 33.0);
+
+        assert_eq!(expected, actual);
     }
 
     #[test]
