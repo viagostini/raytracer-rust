@@ -5,6 +5,7 @@ pub mod core {
     pub mod matrix3;
     pub mod matrix4;
     pub mod point;
+    pub mod transforms;
     pub mod vector;
 }
 
