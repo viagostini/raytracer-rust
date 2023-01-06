@@ -20,10 +20,39 @@ impl Transforms {
             [0.0, 0.0, 0.0, 1.0],
         ])
     }
+
+    pub fn rotation_x(r: f64) -> Matrix4 {
+        Matrix4::from([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, r.cos(), -r.sin(), 0.0],
+            [0.0, r.sin(), r.cos(), 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ])
+    }
+
+    pub fn rotation_y(r: f64) -> Matrix4 {
+        Matrix4::from([
+            [r.cos(), 0.0, r.sin(), 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [-r.sin(), 0.0, r.cos(), 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ])
+    }
+
+    pub fn rotation_z(r: f64) -> Matrix4 {
+        Matrix4::from([
+            [r.cos(), -r.sin(), 0.0, 0.0],
+            [r.sin(), r.cos(), 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ])
+    }
 }
 
 #[cfg(test)]
 pub mod transforms_tests {
+    use std::f64::consts::PI;
+
     use crate::core::{point::Point, vector::Vector};
 
     use super::*;
@@ -81,6 +110,75 @@ pub mod transforms_tests {
 
         let actual = t * p;
         let expected = Point::new(-2.0, 3.0, 4.0);
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn rotating_tuple_around_x_axis() {
+        let p = Point::new(0.0, 1.0, 0.0);
+
+        let half_quarter = Transforms::rotation_x(PI / 4.0);
+
+        let actual = half_quarter * p;
+        let expected = Point::new(0.0, 2.0_f64.sqrt() / 2.0, 2.0_f64.sqrt() / 2.0);
+
+        assert_eq!(expected, actual);
+
+        let full_quarter = Transforms::rotation_x(PI / 2.0);
+
+        let actual = full_quarter * p;
+        let expected = Point::new(0.0, 0.0, 1.0);
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn rotating_tuple_around_x_axis_by_inverse_goes_the_other_way() {
+        let p = Point::new(0.0, 1.0, 0.0);
+
+        let half_quarter_inv = Transforms::rotation_x(PI / 4.0).inverse();
+
+        let actual = half_quarter_inv * p;
+        let expected = Point::new(0.0, 2.0_f64.sqrt() / 2.0, -2.0_f64.sqrt() / 2.0);
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn rotating_tuple_around_y_axis() {
+        let p = Point::new(0.0, 0.0, 1.0);
+
+        let half_quarter = Transforms::rotation_y(PI / 4.0);
+
+        let actual = half_quarter * p;
+        let expected = Point::new(2.0_f64.sqrt() / 2.0, 0.0, 2.0_f64.sqrt() / 2.0);
+
+        assert_eq!(expected, actual);
+
+        let full_quarter = Transforms::rotation_y(PI / 2.0);
+
+        let actual = full_quarter * p;
+        let expected = Point::new(1.0, 0.0, 0.0);
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn rotating_tuple_around_z_axis() {
+        let p = Point::new(0.0, 1.0, 0.0);
+
+        let half_quarter = Transforms::rotation_z(PI / 4.0);
+
+        let actual = half_quarter * p;
+        let expected = Point::new(-2.0_f64.sqrt() / 2.0, 2.0_f64.sqrt() / 2.0, 0.0);
+
+        assert_eq!(expected, actual);
+
+        let full_quarter = Transforms::rotation_z(PI / 2.0);
+
+        let actual = full_quarter * p;
+        let expected = Point::new(-1.0, 0.0, 0.0);
 
         assert_eq!(expected, actual);
     }
