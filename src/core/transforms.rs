@@ -1,6 +1,6 @@
 use super::matrix4::Matrix4;
 
-struct Transforms {}
+pub struct Transforms {}
 
 impl Transforms {
     pub fn translation(x: f64, y: f64, z: f64) -> Matrix4 {
@@ -227,6 +227,42 @@ pub mod transforms_tests {
 
         let actual = s * p;
         let expected = Point::new(2.0, 3.0, 7.0);
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn transformations_can_be_applied_in_sequence() {
+        let p = Point::new(1.0, 0.0, 1.0);
+        let a = Transforms::rotation_x(PI / 2.0);
+        let b = Transforms::scaling(5.0, 5.0, 5.0);
+        let c = Transforms::translation(10.0, 5.0, 7.0);
+
+        let p2 = a * p;
+        let expected = Point::new(1.0, -1.0, 0.0);
+
+        assert_eq!(expected, p2);
+
+        let p3 = b * p2;
+        let expected = Point::new(5.0, -5.0, 0.0);
+
+        assert_eq!(expected, p3);
+
+        let p4 = c * p3;
+        let expected = Point::new(15.0, 0.0, 7.0);
+
+        assert_eq!(expected, p4);
+    }
+
+    #[test]
+    fn chained_transformations_should_be_in_reverse_order() {
+        let p = Point::new(1.0, 0.0, 1.0);
+        let a = Transforms::rotation_x(PI / 2.0);
+        let b = Transforms::scaling(5.0, 5.0, 5.0);
+        let c = Transforms::translation(10.0, 5.0, 7.0);
+
+        let actual = c * b * a * p;
+        let expected = Point::new(15.0, 0.0, 7.0);
 
         assert_eq!(expected, actual);
     }
