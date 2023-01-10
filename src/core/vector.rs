@@ -1,8 +1,8 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-use float_cmp::approx_eq;
+use float_cmp::ApproxEq;
 
-use crate::core::point::Point;
+use crate::{core::point::Point, utils::utils::FLOAT_MARGIN};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector {
@@ -46,9 +46,9 @@ impl Vector {
 
 impl PartialEq for Vector {
     fn eq(&self, other: &Self) -> bool {
-        approx_eq!(f64, self.x, other.x)
-            && approx_eq!(f64, self.y, other.y)
-            && approx_eq!(f64, self.z, other.z)
+        self.x.approx_eq(other.x, FLOAT_MARGIN)
+            && self.y.approx_eq(other.y, FLOAT_MARGIN)
+            && self.z.approx_eq(other.z, FLOAT_MARGIN)
     }
 }
 
