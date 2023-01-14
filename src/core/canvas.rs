@@ -20,6 +20,10 @@ impl Canvas {
             pixels: vec![vec![color; height]; width],
         }
     }
+
+    pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) -> () {
+        self[[x, y]] = color;
+    }
 }
 
 impl Index<[usize; 2]> for Canvas {
