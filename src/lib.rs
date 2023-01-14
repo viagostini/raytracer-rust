@@ -9,6 +9,8 @@ pub mod core {
     pub mod vector;
 }
 
+pub mod ray;
+
 pub mod utils {
     pub mod utils;
 }
